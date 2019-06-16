@@ -1,0 +1,159 @@
+#include <stdio.h>
+#include "E101.h"
+#include <unistd.h>
+#include <time.h>
+
+int main()
+{
+  int err;
+  err = init();
+  int countrun = 0;
+  int countr = 80;
+  int totred = 0;
+  int totint = 0;
+  int totgreen = 0;
+  int totblue = 0;
+  int countc = 107;
+  float redness = 0;
+  float greenness = 0;
+  float blueness = 0; 
+  boolean red = false;
+  boolean green = false;
+  boolean blue = false; 
+  boolean yellow = false;
+  
+  while(red == false || blue == false || green == false || yellow == false)
+  {
+    open_screen_stream();
+    take_picture();
+    update_screen();
+    countr = 80;
+    countc = 107;
+    totred = 0;
+    totblue = 0;
+    totgreen = 0;
+    totint = 0;
+      
+      while(countr<160)
+      {
+		  countc=0;
+		  while(countc<213)
+		  {
+			  totred = totred + (int)get_pixel(countr, countc, 0);
+			  totgreen = totgreen + (int)get_pixel(countr, countc, 1);
+			  totblue = totblue + (int)get_pixel(countr, countc, 2);
+			  totint = totint + (int)get_pixel(countr, countc, 3);
+			  redness = (float)totred/(3.0*(float)totint);
+			  greenness = (float)totgreen/(3.0*(float)totint);
+			  blueness = (float)totblue/(3.0*(float)totint);
+			  
+			  countc++;
+		  }
+		  countr++;
+	  }
+	  printf("\n");
+	  printf("Total int %d\n", totint);
+	  printf("Redness %f\n", redness);
+	  printf("Greenness %f\n", greenness);
+	  printf("Blueness %f\n", blueness);
+	  //printf("r/g %f\n", redness/greenness);
+	  //printf("r/b %f\n", redness/blueness);
+	  //printf("g/b %f\n", greenness/blueness);
+	  //printf("b/g %f\n", blueness/greenness);
+	  
+if(red == false){
+	  if (redness>greenness && redness>blueness){
+		  if (redness > 0.42)
+		  {
+			  red = true;
+
+		  }
+		  else{
+		  	v_left= 51;
+		  	v_right= 43;
+		  	SetMotors();
+		  	
+		  }
+	  }
+	  else{
+		  
+		  v_left= 51;
+		  v_right= 48;
+		  SetMotors();
+	  }
+}
+	if(red == true){
+	  if (greenness>redness && greenness>blueness){
+		  if (greenness > 0.42)
+		  {
+			   green = true;
+
+		  }
+		  else{
+		  v_left= 51;
+		  v_right= 43;
+		  SetMotors();
+		 
+		  }
+	  }
+	  else{
+		  
+		  v_left= 51;
+		  v_right= 48;
+		  SetMotors();
+	  }
+}
+
+if(red == true && green == true){
+	  if (blueness>redness && blueness>greenness){
+		  if (greenness > 0.42)
+		  {
+			  blue = true;
+
+		  }
+		  else{
+		  v_left= 51;
+		  v_right= 43;
+		  SetMotors();
+		  
+		  }
+	  }
+	  else{
+		  
+		  v_left= 51;
+		  v_right= 48;
+		  SetMotors();
+	  }
+}
+
+if(red == true && green == true && blue == true){
+	  if (redness>blueness && greenness>blueness){
+		  if (greenness > 0.42)
+		  {
+			  yellow = true;
+
+		  }
+		  else{
+		  v_left= 51;
+		  v_right= 43;
+		  SetMotors();
+		  
+		  }
+	  }
+	  else{
+		  
+		  v_left= 51;
+		  v_right= 48;
+		  SetMotors();
+	  }
+}
+
+	  countrun++;
+  }
+  close_screen_stream();
+  printf("After init() error %d\n", err);
+  printf("Again\n");
+  return 0;
+}
+	  
+
